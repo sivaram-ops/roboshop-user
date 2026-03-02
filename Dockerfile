@@ -4,7 +4,7 @@ FROM node:alpine AS builder
 WORKDIR /build-dir
 
 # Copy only package files first. This caches the 'npm install' step unless dependencies change, speeding up builds.
-COPY ./app-code/package*.json ./
+COPY package*.json ./
 RUN npm install --omit=dev 
 
 # -----------------------------------
@@ -33,7 +33,7 @@ RUN chown roboshop:roboshop /user-app
 USER 1001
 
 # Copy files and explicitly set ownership to the non-root user
-COPY --chown=1001:1001 ./app-code/server.js .
+COPY --chown=1001:1001 src/server.js .
 COPY --chown=1001:1001 --from=builder /build-dir/node_modules ./node_modules 
 
 # Document the port the container listens on
